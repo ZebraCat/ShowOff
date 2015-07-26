@@ -8,6 +8,7 @@ import java.util.Date;
  * Created by Asaf on 24-Jul-15.
  */
 public class Post implements ShowoffItem {
+    private String postId;
     private String userName;
     private String postText;
     private int likes;
@@ -61,6 +62,14 @@ public class Post implements ShowoffItem {
 
     public void setPostedAt(Date postedAt) {
         this.postedAt = postedAt;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
     //delete this
     public String toString(){

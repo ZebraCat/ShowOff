@@ -7,4 +7,5 @@ import com.example.omri.showoff.Helpers.QueryParams;
  */
 public interface NetworkHelper {
     void fetch(QueryParams params);
+    void update(QueryParams params);
 }

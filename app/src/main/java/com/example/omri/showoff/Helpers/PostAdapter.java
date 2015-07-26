@@ -10,12 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.omri.showoff.DataManager;
 import com.example.omri.showoff.MyAdapter;
 import com.example.omri.showoff.Post;
 import com.example.omri.showoff.PostDataManager;
 import com.example.omri.showoff.R;
-import com.example.omri.showoff.ShowoffItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -55,7 +53,7 @@ public class PostAdapter extends ArrayAdapter<Post> implements MyAdapter{
         dataManager = new PostDataManager(this);
     }
 
-    public View getView(int position,View convertView,ViewGroup parent){
+    public View getView(final int position,View convertView,ViewGroup parent){
         View rowView = convertView;
         if(rowView == null){
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,6 +66,19 @@ public class PostAdapter extends ArrayAdapter<Post> implements MyAdapter{
             viewHolder.postText = ((TextView) rowView.findViewById(R.id.post_text));
             viewHolder.commentButton = ((Button) rowView.findViewById(R.id.comment_button));
             viewHolder.loveItButton = ((Button) rowView.findViewById(R.id.love_it_button));
+            viewHolder.loveItButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!v.isPressed()){
+                        v.setPressed(true);
+                        dataManager.updateLoveIt(values.get(position).getPostId(),1);
+                    }
+                    else{
+                        v.setPressed(false);
+                        dataManager.updateLoveIt(values.get(position).getPostId(),-1);
+                    }
+                }
+            });
             viewHolder.likes = ((TextView) rowView.findViewById(R.id.post_likes));
             viewHolder.postedAt = ((TextView) rowView.findViewById(R.id.post_posted_at));
             rowView.setTag(viewHolder);
@@ -100,7 +111,7 @@ public class PostAdapter extends ArrayAdapter<Post> implements MyAdapter{
             Log.d("Builder",postViewHolder.postText.getText().toString());
             postViewHolder.userName.setText(post.getUserName());
             if(post.getLikes() > 0)
-                postViewHolder.likes.setText(String.valueOf(post.getLikes()));
+                postViewHolder.likes.setText(String.valueOf(post.getLikes()) + " People Love It!");
 
             //TO DO - put placeholder in picasso
             Picasso.with(context).load(post.getProfileImage()).into(postViewHolder.profilePic);

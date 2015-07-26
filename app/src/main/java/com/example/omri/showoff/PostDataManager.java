@@ -28,4 +28,11 @@ public class PostDataManager implements DataManager {
     public void getResults(List<? extends ShowoffItem> results) {
         adapter.getResults((List<Post>)results);
     }
+
+    public void updateLoveIt(String postId,int amount){
+        QueryParams params = new QueryParams();
+        params.setObjectId(postId);
+        params.setAmount(amount);
+        networkHelper.update(params);
+    }
 }

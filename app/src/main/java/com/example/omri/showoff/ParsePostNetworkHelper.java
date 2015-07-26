@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.omri.showoff.Helpers.QueryParams;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -19,12 +20,32 @@ import java.util.List;
 public class ParsePostNetworkHelper implements NetworkHelper {
     private DataManager dataManager;
     private final int GET_PREV_POSTS = 0;
+    private final int UPDATE_LIKES = 0;
     private final int PAGE_SIZE = 8;
-    private boolean processing;
+    private boolean processingFetch;
+    private boolean proccessingUpdate;
 
     public ParsePostNetworkHelper(DataManager dataManager){
         this.dataManager = dataManager;
-        processing = false;
+        processingFetch = false;
+        proccessingUpdate = false;
+    }
+
+    @Override
+    public void update(QueryParams params) {
+        final QueryParams parameters = params;
+        if(params.getQueryNum() == UPDATE_LIKES){
+            if(!proccessingUpdate){
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
+                query.getInBackground(params.getObjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject parseObject, ParseException e) {
+                        parseObject.put("likes",parseObject.getInt("likes") + parameters.getAmount());
+                        parseObject.saveInBackground();
+                    }
+                });
+            }
+        }
     }
 
     public void fetch(QueryParams params) {
@@ -34,18 +55,18 @@ public class ParsePostNetworkHelper implements NetworkHelper {
             query.setLimit(PAGE_SIZE);
             query.orderByDescending("updatedAt");
 
-            if (!processing) {
-                processing = true;
+            if (!processingFetch) {
+                processingFetch = true;
                 query.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> list, ParseException e) {
                         if (e == null) {
                             if (list.size() == 0) {
-                                processing = false;
+                                processingFetch = false;
                                 Log.d("QUERY", "size is 0");
                                 return;
                             }
-                            processing = false;
+                            processingFetch = false;
                             List<Post> posts = ParseToPostTransformer.trasformPosts(list);
                             dataManager.getResults(posts);
                         } else {
@@ -64,6 +85,7 @@ public class ParsePostNetworkHelper implements NetworkHelper {
             List<Post> transformedPosts = new ArrayList<>();
             for(ParseObject object: parsePosts){
                 Post post = new Post();
+                post.setPostId(object.getObjectId());
                 post.setLikes(object.getInt("likes"));
                 post.setPostImage(Uri.parse(object.getParseFile("postPicture").getUrl()));
                 post.setPostText(object.getString("postText"));
