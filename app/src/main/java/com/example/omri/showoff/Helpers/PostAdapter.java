@@ -35,6 +35,13 @@ public class PostAdapter extends ArrayAdapter<Post> implements MyAdapter{
         Log.d("Adapter", "In get results");
     }
 
+    public void getNextPosts(){
+        if(values.size() > 0)
+            dataManager.fetchNextPosts(values.get(values.size() - 1).getPostedAt());
+        else
+            dataManager.fetchNextPosts(new Date(System.currentTimeMillis()));
+    }
+
     static class ViewHolder{
         public TextView userName;
         public TextView postText;
@@ -69,12 +76,12 @@ public class PostAdapter extends ArrayAdapter<Post> implements MyAdapter{
             viewHolder.loveItButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!v.isPressed()){
-                        v.setPressed(true);
+                    if(!v.isSelected()){
+                        v.setSelected(true);
                         dataManager.updateLoveIt(values.get(position).getPostId(),1);
                     }
                     else{
-                        v.setPressed(false);
+                        v.setSelected(false);
                         dataManager.updateLoveIt(values.get(position).getPostId(),-1);
                     }
                 }
@@ -89,13 +96,6 @@ public class PostAdapter extends ArrayAdapter<Post> implements MyAdapter{
         holder = PostViewHolderBuilder.build(holder, values.get(position),context);
 
         return rowView;
-    }
-
-    public void getNextPosts(){
-        if(values.size() > 0)
-            dataManager.fetchNextPosts(values.get(values.size() - 1).getPostedAt());
-        else
-            dataManager.fetchNextPosts(new Date(System.currentTimeMillis()));
     }
 
     private static class PostViewHolderBuilder{

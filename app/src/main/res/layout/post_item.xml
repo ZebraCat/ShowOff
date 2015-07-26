@@ -75,6 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/love_it_button"
+                android:background="@drawable/love_it_button_custom"
                 android:text="Love It!"/>
             <Button
                 android:layout_width="wrap_content"
