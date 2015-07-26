@@ -1,6 +1,7 @@
 package com.example.omri.showoff.Helpers;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,10 +79,14 @@ public class PostAdapter extends ArrayAdapter<Post> implements MyAdapter{
                 public void onClick(View v) {
                     if(!v.isSelected()){
                         v.setSelected(true);
+                        ((Button)v).setText("Hate It!");
+                        ((Button)v).setTextColor(Color.parseColor("#FF0000"));//red color
                         dataManager.updateLoveIt(values.get(position).getPostId(),1);
                     }
                     else{
                         v.setSelected(false);
+                        ((Button)v).setText("Love It!");
+                        ((Button)v).setTextColor(Color.parseColor("#00CC00"));//green color
                         dataManager.updateLoveIt(values.get(position).getPostId(),-1);
                     }
                 }
