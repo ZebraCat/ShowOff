@@ -15,6 +15,7 @@ import com.example.omri.showoff.MyAdapter;
 import com.example.omri.showoff.Post;
 import com.example.omri.showoff.PostDataManager;
 import com.example.omri.showoff.R;
+import com.example.omri.showoff.ShowoffItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -30,7 +31,7 @@ public class PostAdapter extends ArrayAdapter<Post> implements MyAdapter{
     private PostDataManager dataManager;
 
     @Override
-    public void getResults(List<Post> list) {
+    public void getResults(List list) {
         values.addAll(list);
         this.notifyDataSetChanged();
         Log.d("Adapter", "In get results");

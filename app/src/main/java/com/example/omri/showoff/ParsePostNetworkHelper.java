@@ -49,32 +49,38 @@ public class ParsePostNetworkHelper implements NetworkHelper {
     }
 
     public void fetch(QueryParams params) {
-        if(params.getQueryNum() == GET_PREV_POSTS){
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
-            query.whereLessThan("updatedAt", params.getDate());
-            query.setLimit(PAGE_SIZE);
-            query.orderByDescending("updatedAt");
+        switch(params.getQueryNum()){
+            case GET_PREV_POSTS:
+                fetchPrevPosts(params);
+                break;
+        }
+    }
 
-            if (!processingFetch) {
-                processingFetch = true;
-                query.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List<ParseObject> list, ParseException e) {
-                        if (e == null) {
-                            if (list.size() == 0) {
-                                processingFetch = false;
-                                Log.d("QUERY", "size is 0");
-                                return;
-                            }
+    public void fetchPrevPosts(QueryParams params){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
+        query.whereLessThan("updatedAt", params.getDate());
+        query.setLimit(PAGE_SIZE);
+        query.orderByDescending("updatedAt");
+
+        if (!processingFetch) {
+            processingFetch = true;
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> list, ParseException e) {
+                    if (e == null) {
+                        if (list.size() == 0) {
                             processingFetch = false;
-                            List<Post> posts = ParseToPostTransformer.trasformPosts(list);
-                            dataManager.getResults(posts);
-                        } else {
-                            Log.d("QUERY", e.toString());
+                            Log.d("QUERY", "size is 0");
+                            return;
                         }
+                        processingFetch = false;
+                        List<Post> posts = ParseToPostTransformer.trasformPosts(list);
+                        dataManager.getResults(posts);
+                    } else {
+                        Log.d("QUERY", e.toString());
                     }
-                });
-            }
+                }
+            });
         }
     }
 
