@@ -1,6 +1,9 @@
 package com.example.omri.showoff.Helpers;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.omri.showoff.Brand;
 import com.example.omri.showoff.BrandDataManager;
+import com.example.omri.showoff.BrandDiscountActivity;
 import com.example.omri.showoff.MyAdapter;
 import com.example.omri.showoff.R;
 import com.squareup.picasso.Picasso;
@@ -29,6 +33,8 @@ public class BrandAdapter extends ArrayAdapter<Brand> implements MyAdapter{
     private List<Brand> orig;
     private Context context;
     private BrandDataManager dataManager;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
 
     public BrandAdapter(Context context,List<Brand> brands){
         super(context,R.layout.brand_item,brands);
@@ -53,7 +59,10 @@ public class BrandAdapter extends ArrayAdapter<Brand> implements MyAdapter{
             @Override
             public void onClick(View v) {
                 //TO DO - change on click listener to open next fragment
-                Toast.makeText(context,brands.get(position).getName(),Toast.LENGTH_LONG).show();
+                Brand current = brands.get(position);
+                Intent intent = new Intent(context,BrandDiscountActivity.class);
+                intent.putExtra("Brand",current);
+                context.startActivity(intent);
             }
         });
         Picasso.with(context).load(brands.get(position).getBrandLogo()).into(imageView);
