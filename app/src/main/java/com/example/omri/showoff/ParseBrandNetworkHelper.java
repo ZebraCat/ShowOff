@@ -34,9 +34,7 @@ public class ParseBrandNetworkHelper implements NetworkHelper {
     }
 
     @Override
-    public void update(QueryParams params) {
-
-    }
+    public void update(QueryParams params) {}
 
     public void fetchAllBrands(){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Brand");
