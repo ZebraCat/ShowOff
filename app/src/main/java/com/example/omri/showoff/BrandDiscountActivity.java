@@ -1,12 +1,16 @@
 package com.example.omri.showoff;
 
+import android.graphics.Bitmap;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class BrandDiscountActivity extends ActionBarActivity {
+public class BrandDiscountActivity extends ActionBarActivity implements BrandDiscountActivityFragment.OnCameraConfirmedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +39,16 @@ public class BrandDiscountActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCameraConfirm(Bitmap bitmap) {
+        EditPostFragment editPostFragment = new EditPostFragment();
+        editPostFragment.setPhoto(bitmap);
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.fragment, editPostFragment);
+        transaction.commit();
     }
 }

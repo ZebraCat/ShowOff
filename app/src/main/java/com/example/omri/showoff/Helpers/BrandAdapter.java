@@ -33,7 +33,6 @@ public class BrandAdapter extends ArrayAdapter<Brand> implements MyAdapter{
     private List<Brand> orig;
     private Context context;
     private BrandDataManager dataManager;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
     public BrandAdapter(Context context,List<Brand> brands){
